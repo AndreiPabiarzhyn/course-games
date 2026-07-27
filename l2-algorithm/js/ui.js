@@ -9,16 +9,44 @@ function createCmdBlock(cmdId, source) {
   btn.type = "button";
   btn.className = `cmd-block ${def.class} ${source === "palette" ? "cmd-block--palette" : "cmd-block--in-slot"}`;
   btn.dataset.cmd = cmdId;
+  btn.setAttribute("aria-label", def.label);
+  btn.title = def.label;
   btn.innerHTML = `${iconHtml(cmdId)}<span class="cmd-block__label">${def.label}</span>`;
   btn.addEventListener("pointerdown", (e) => startDrag(e, cmdId, source, btn));
   return btn;
 }
 
+function updateCompactMode() {
+  const app = document.getElementById("app");
+  if (!app || !screenGame.classList.contains("screen--active")) return;
+
+  app.classList.remove("compact-cmds");
+
+  requestAnimationFrame(() => {
+    let compact = false;
+    const panels = document.querySelector(".controls-panels");
+    if (panels && panels.clientWidth < 270) compact = true;
+
+    if (!compact) {
+      document.querySelectorAll(".cmd-block__label").forEach((label) => {
+        const block = label.closest(".cmd-block");
+        if (!block || block.offsetParent === null) return;
+        if (label.scrollWidth > label.clientWidth + 2) compact = true;
+      });
+    }
+
+    app.classList.toggle("compact-cmds", compact);
+  });
+}
+
 function showGhost(cmdId, x, y) {
   const def = COMMANDS[cmdId];
+  const compact = document.getElementById("app").classList.contains("compact-cmds");
   dragGhostEl.hidden = false;
   dragGhostEl.className = `drag-ghost ${def.class}`;
-  dragGhostEl.innerHTML = `${iconHtml(cmdId)}<span class="cmd-block__label">${def.label}</span>`;
+  const labelHtml = compact ? "" : `<span class="cmd-block__label">${def.label}</span>`;
+  dragGhostEl.innerHTML = `${iconHtml(cmdId)}${labelHtml}`;
+  dragGhostEl.setAttribute("aria-label", def.label);
   moveGhost(x, y);
 }
 
@@ -30,6 +58,7 @@ function hideGhost() {
 function buildPalette() {
   commandPaletteEl.innerHTML = "";
   PALETTE_ORDER.forEach((id) => commandPaletteEl.appendChild(createCmdBlock(id, "palette")));
+  updateCompactMode();
 }
 
 function buildSlots() {
@@ -54,6 +83,7 @@ function buildSlots() {
     li.appendChild(content);
     algorithmSlotsEl.appendChild(li);
   }
+  updateCompactMode();
 }
 
 function refreshUI() {
@@ -69,7 +99,7 @@ function findSlotIndex(el) {
 }
 
 function moveGhost(x, y) {
-  const w = dragGhostEl.offsetWidth || 120;
+  const w = dragGhostEl.offsetWidth || 48;
   const h = dragGhostEl.offsetHeight || 44;
   dragGhostEl.style.left = `${x - w / 2}px`;
   dragGhostEl.style.top = `${y - h / 2}px`;
@@ -144,5 +174,14 @@ btnStart.addEventListener("click", startGame);
 btnRestart.addEventListener("click", restartGame);
 btnRun.addEventListener("click", runAlgorithm);
 btnClear.addEventListener("click", clearSlots);
-window.addEventListener("resize", () => { sizeGridCells(); positionRobot(false); });
+window.addEventListener("resize", () => {
+  sizeGridCells();
+  positionRobot(false);
+  updateCompactMode();
+});
+
+const panelsObserver = new ResizeObserver(() => updateCompactMode());
+const panelsEl = document.querySelector(".controls-panels");
+if (panelsEl) panelsObserver.observe(panelsEl);
+
 buildPalette();
