@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Почини проводку!</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Стартовый экран -->
+    <section id="screen-start" class="screen screen--active">
+      <div class="screen__content screen__content--start">
+        <div class="start-mascot" aria-hidden="true">⚡</div>
+        <h1 class="title">Почини<br>проводку!</h1>
+        <p class="subtitle">Соедини провода<br>одного цвета</p>
+        <button id="btn-start" class="btn btn--primary btn--big" type="button">
+          Играть!
+        </button>
+      </div>
+    </section>
+
+    <!-- Игровой экран -->
+    <section id="screen-game" class="screen">
+      <div class="game-header">
+        <span id="level-badge" class="level-badge">Уровень 1 из 3</span>
+      </div>
+
+      <div class="game-board" id="game-board">
+        <img class="game-board__bg" src="assets/bg-game.svg" alt="" draggable="false">
+
+        <div class="panel-console" id="panel">
+          <div class="panel-console__latch" aria-hidden="true"></div>
+          <div class="panel-console__side panel-console__side--left" aria-hidden="true"></div>
+          <div class="panel-console__side panel-console__side--right" aria-hidden="true"></div>
+
+          <div class="panel__inner">
+            <div class="panel__texture" aria-hidden="true"></div>
+            <div class="terminals terminals--left" id="terminals-left"></div>
+            <canvas id="wire-canvas" aria-hidden="true"></canvas>
+            <div class="terminals terminals--right" id="terminals-right"></div>
+            <div class="drag-handles" id="drag-handles"></div>
+          </div>
+        </div>
+
+        <p class="hint" id="hint"><span class="hint__icon" aria-hidden="true">👆</span> Потяни за <strong>кружок</strong> к такому же значку</p>
+      </div>
+
+      <!-- Мини-праздник между уровнями -->
+      <div id="level-popup" class="level-popup" hidden>
+        <div class="level-popup__stars" aria-hidden="true">⭐⭐⭐</div>
+        <p class="level-popup__text">Отлично!</p>
+      </div>
+    </section>
+
+    <!-- Экран победы -->
+    <section id="screen-win" class="screen">
+      <div class="confetti" id="confetti" aria-hidden="true"></div>
+      <div class="screen__content screen__content--win">
+        <h2 class="win-title">Ты молодец!</h2>
+        <div class="win-cat-wrap">
+          <img
+            id="victory-cat"
+            class="win-cat"
+            src="assets/victory-cat.png"
+            alt="Радостный котик празднует победу"
+            draggable="false"
+          >
+        </div>
+        <p class="win-subtitle">Все провода починены!</p>
+        <button id="btn-restart" class="btn btn--primary btn--big" type="button">
+          Начать заново
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <script src="js/game.js"></script>
+</body>
+</html>
