@@ -1,11 +1,10 @@
 let currentLevel = 0;
-let slots = Array(SLOT_COUNT).fill(null);
+let slots = Array(slotCountFor(0)).fill(null);
 let grid = [];
 let startPos = { x: 0, y: 0 };
 let goalPos = { x: 0, y: 0 };
 let robotPos = { x: 0, y: 0 };
 let isRunning = false;
-let dragState = null;
 
 function parseLevel(levelDef) {
   grid = levelDef.map.map((row) => row.split(""));
@@ -34,9 +33,7 @@ function sizeGridCells() {
 }
 
 function buildGrid() {
-  const levelDef = LEVELS[currentLevel];
-  parseLevel(levelDef);
-  gridWrapEl.style.backgroundImage = `url("${levelDef.bg}")`;
+  parseLevel(LEVELS[currentLevel]);
   gridBoardEl.innerHTML = "";
   gridBoardEl.style.gridTemplateColumns = `repeat(${grid[0].length}, var(--cell-size, 48px))`;
   gridBoardEl.style.gridTemplateRows = `repeat(${grid.length}, var(--cell-size, 48px))`;
@@ -75,12 +72,7 @@ function positionRobot(animate) {
   const size = robotWrapEl.offsetWidth || 48;
   robotWrapEl.style.left = `${left - size / 2}px`;
   robotWrapEl.style.top = `${top - size / 2}px`;
-  robotWrapEl.style.transition = animate ? "" : "none";
-}
-
-function setRobotAngle(angle, animate) {
-  robotEl.style.transition = animate ? "transform 0.2s ease" : "none";
-  robotEl.style.transform = `rotate(${angle}deg)`;
+  robotWrapEl.style.transition = animate ? "left 0.35s ease, top 0.35s ease" : "none";
 }
 
 function isWall(x, y) {
@@ -90,10 +82,6 @@ function isWall(x, y) {
 async function executeCommand(cmdId) {
   const move = MOVE[cmdId];
   if (!move) return false;
-
-  setRobotAngle(move.angle, true);
-  Sounds.turn();
-  await sleep(180);
 
   const nx = robotPos.x + move.dx;
   const ny = robotPos.y + move.dy;
@@ -120,7 +108,6 @@ async function runAlgorithm() {
   isRunning = true;
   btnRun.disabled = true;
   robotPos = { ...startPos };
-  setRobotAngle(MOVE.right.angle, false);
   positionRobot(false);
 
   for (const cmdId of program) {
@@ -130,7 +117,6 @@ async function runAlgorithm() {
       btnRun.disabled = false;
       await sleep(600);
       robotPos = { ...startPos };
-      setRobotAngle(MOVE.right.angle, false);
       positionRobot(true);
       return;
     }
@@ -147,7 +133,7 @@ async function runAlgorithm() {
       await sleep(1400);
       levelPopup.hidden = true;
       currentLevel++;
-      slots = Array(SLOT_COUNT).fill(null);
+      slots = Array(slotCountFor(currentLevel)).fill(null);
       refreshUI();
     } else {
       spawnConfetti(confettiEl);
@@ -160,7 +146,6 @@ async function runAlgorithm() {
     setTimeout(() => gridWrapEl.classList.remove("grid-wrap--shake"), 400);
     await sleep(700);
     robotPos = { ...startPos };
-    setRobotAngle(MOVE.right.angle, false);
     positionRobot(true);
   }
 
@@ -171,7 +156,7 @@ async function runAlgorithm() {
 function startGame() {
   Sounds.start();
   currentLevel = 0;
-  slots = Array(SLOT_COUNT).fill(null);
+  slots = Array(slotCountFor(currentLevel)).fill(null);
   isRunning = false;
   showScreen(screenGame);
   refreshUI();

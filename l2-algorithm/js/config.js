@@ -10,34 +10,38 @@ const SLOT_COUNT = 7;
 const TOTAL_LEVELS = 2;
 
 const MOVE = {
-  up:    { dx: 0, dy: -1, angle: -90 },
-  down:  { dx: 0, dy: 1, angle: 90 },
-  left:  { dx: -1, dy: 0, angle: 180 },
-  right: { dx: 1, dy: 0, angle: 0 },
+  up:    { dx: 0, dy: -1 },
+  down:  { dx: 0, dy: 1 },
+  left:  { dx: -1, dy: 0 },
+  right: { dx: 1, dy: 0 },
 };
 
 const LEVELS = [
   {
-    bg: "assets/bg-level1.svg",
+    slots: 7,
     map: [
       "########",
-      "#S.....#",
-      "#..##..#",
-      "#..##..#",
-      "#...G..#",
+      "#S....##",
+      "#####.##",
+      "#####.##",
+      "#####G##",
       "########",
     ],
   },
   {
-    bg: "assets/bg-level2.svg",
+    slots: 8,
     map: [
       "#######",
-      "#S....#",
-      "#.##..#",
-      "#.....#",
-      "#.##..#",
-      "#..G..#",
+      "#S.####",
+      "##..###",
+      "#G#.###",
+      "#...###",
+      "#######",
       "#######",
     ],
   },
 ];
+
+function slotCountFor(levelIndex) {
+  return LEVELS[levelIndex]?.slots ?? SLOT_COUNT;
+}

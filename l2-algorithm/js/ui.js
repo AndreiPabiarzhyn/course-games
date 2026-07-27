@@ -25,7 +25,7 @@ function updateCompactMode() {
   requestAnimationFrame(() => {
     let compact = false;
     const panels = document.querySelector(".controls-panels");
-    if (panels && panels.clientWidth < 270) compact = true;
+    if (panels && panels.clientWidth < 320) compact = true;
 
     if (!compact) {
       document.querySelectorAll(".cmd-block__label").forEach((label) => {
@@ -63,7 +63,7 @@ function buildPalette() {
 
 function buildSlots() {
   algorithmSlotsEl.innerHTML = "";
-  for (let i = 0; i < SLOT_COUNT; i++) {
+  for (let i = 0; i < slotCountFor(currentLevel); i++) {
     const li = document.createElement("li");
     li.className = "algorithm-slot";
     li.dataset.index = i;
@@ -148,7 +148,7 @@ function startDrag(e, cmdId, source, el) {
 
 function clearSlots() {
   if (isRunning) return;
-  slots = Array(SLOT_COUNT).fill(null);
+  slots = Array(slotCountFor(currentLevel)).fill(null);
   buildSlots();
 }
 

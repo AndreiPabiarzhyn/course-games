@@ -6,7 +6,7 @@
   --btn-hover: #ff8f00;
   --btn-shadow: #e65100;
   --panel: rgba(255,255,255,0.92);
-  --slot-h: clamp(34px, 7vmin, 42px);
+  --slot-h: clamp(36px, 7.2vmin, 44px);
 }
 
 html, body {
@@ -54,7 +54,9 @@ html, body {
 
 /* ===== GAME ===== */
 #screen-game {
-  background: linear-gradient(180deg, #a5d6a7 0%, #e8f5e9 45%);
+  background:
+    radial-gradient(ellipse 90% 60% at 50% 0%, rgba(255,255,255,0.55) 0%, transparent 70%),
+    linear-gradient(180deg, #b3e5fc 0%, #c8e6c9 38%, #a5d6a7 100%);
   gap: clamp(4px, 1vmin, 8px);
 }
 
@@ -86,11 +88,31 @@ html, body {
 .grid-wrap {
   flex: 1; position: relative; width: 100%;
   display: flex; align-items: center; justify-content: center;
-  background: url("../assets/meadow.svg") center/cover no-repeat;
+  background:
+    radial-gradient(circle at 15% 12%, rgba(255,255,255,0.45) 0%, transparent 22%),
+    radial-gradient(circle at 88% 18%, rgba(255,255,255,0.3) 0%, transparent 18%),
+    radial-gradient(circle at 72% 88%, rgba(255,255,255,0.2) 0%, transparent 25%),
+    linear-gradient(165deg, #81d4fa 0%, #a5d6a7 35%, #7cb342 68%, #558b2f 100%);
   border-radius: clamp(12px, 2vmin, 18px);
-  box-shadow: inset 0 0 30px rgba(0,0,0,0.12), 0 5px 18px rgba(0,0,0,0.12);
+  box-shadow:
+    inset 0 0 0 3px rgba(255,255,255,0.35),
+    inset 0 0 40px rgba(255,255,255,0.15),
+    0 8px 24px rgba(46,125,50,0.22);
   overflow: hidden;
   min-height: clamp(220px, 58vh, 560px);
+}
+.grid-wrap::before {
+  content: "";
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.14) 1.5px, transparent 1.5px);
+  background-size: 20px 20px;
+  opacity: 0.7;
+}
+.grid-wrap::after {
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: 0; height: 28%;
+  pointer-events: none; z-index: 0;
+  background: linear-gradient(to top, rgba(85,139,47,0.35) 0%, transparent 100%);
 }
 .grid-board {
   display: grid; gap: 3px;
@@ -102,8 +124,16 @@ html, body {
   height: var(--cell-size, 52px);
   border-radius: 8px;
 }
-.grid-cell--floor { background: rgba(255,255,255,0.18); }
-.grid-cell--wall { background: rgba(62,39,35,0.8); box-shadow: inset 0 2px 4px rgba(0,0,0,0.35); }
+.grid-cell--floor {
+  background: linear-gradient(160deg, #e6f4a8 0%, #c5e1a5 55%, #aed581 100%);
+  box-shadow: inset 0 2px 0 rgba(255,255,255,0.55), 0 2px 5px rgba(0,0,0,0.1);
+  border: 2px solid rgba(255,255,255,0.45);
+}
+.grid-cell--wall {
+  background: linear-gradient(160deg, #8d6e63 0%, #5d4037 55%, #4e342e 100%);
+  box-shadow: inset 0 3px 6px rgba(0,0,0,0.35), 0 1px 0 rgba(255,255,255,0.08);
+  border: 2px solid rgba(0,0,0,0.15);
+}
 .grid-cell--goal { background: rgba(255,235,59,0.55); animation: goalPulse 1.5s ease infinite; }
 @keyframes goalPulse {
   0%,100%{ box-shadow: 0 0 0 0 rgba(255,235,59,0.5); }
@@ -119,7 +149,7 @@ html, body {
   width: calc(var(--cell-size, 52px) * 1.2);
   transition: left 0.35s ease, top 0.35s ease;
 }
-.robot-sprite { width: 100%; height: auto; display: block; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.35)); transition: transform 0.25s ease; }
+.robot-sprite { width: 100%; height: auto; display: block; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.35)); }
 .robot-wrap--bounce .robot-sprite { animation: robotHop 0.35s ease; }
 @keyframes robotHop { 50% { transform: scale(1.12) translateY(-5px); } }
 
@@ -130,15 +160,16 @@ html, body {
 
 /* Controls sidebar — slots + palette side by side */
 .controls-area {
-  flex: 0 0 clamp(240px, 26%, 300px);
-  max-width: 300px;
-  display: flex; flex-direction: column; gap: 6px;
+  flex: 0 0 clamp(272px, 30%, 352px);
+  max-width: 352px;
+  min-width: 256px;
+  display: flex; flex-direction: column; gap: 8px;
   min-height: 0;
 }
 .controls-panels {
   flex: 1; min-height: 0;
   display: grid;
-  grid-template-columns: minmax(118px, 1fr) minmax(118px, 1fr);
+  grid-template-columns: minmax(128px, 1fr) minmax(128px, 1fr);
   gap: clamp(6px, 1vmin, 10px);
 }
 .panel {
@@ -288,7 +319,7 @@ body:has(#screen-win.screen--active) .site-footer p { color: rgba(120,53,15,0.45
 body:has(#screen-win.screen--active) .site-footer__author { color: rgba(120,53,15,0.65); }
 
 /* ===== RESPONSIVE / Genially embed ===== */
-@media (max-width: 720px), (max-height: 520px) {
+@media (max-width: 720px) {
   .game-main {
   flex: 1; min-height: 0;
   display: flex; gap: clamp(8px, 1.2vmin, 12px);
@@ -302,25 +333,45 @@ body:has(#screen-win.screen--active) .site-footer__author { color: rgba(120,53,1
   display: flex;
 }
   .controls-area {
-  flex: 0 0 clamp(240px, 26%, 300px);
-  max-width: 300px;
-  display: flex; flex-direction: column; gap: 6px;
+  flex: 0 0 clamp(272px, 30%, 352px);
+  max-width: 352px;
+  min-width: 256px;
+  display: flex; flex-direction: column; gap: 8px;
   min-height: 0;
 }
-  .controls-panels { grid-template-columns: minmax(118px, 1fr) minmax(118px, 1fr); max-height: clamp(140px, 28vh, 200px); }
+  .controls-panels { grid-template-columns: minmax(128px, 1fr) minmax(128px, 1fr); }
   .grid-wrap {
   flex: 1; position: relative; width: 100%;
   display: flex; align-items: center; justify-content: center;
-  background: url("../assets/meadow.svg") center/cover no-repeat;
+  background:
+    radial-gradient(circle at 15% 12%, rgba(255,255,255,0.45) 0%, transparent 22%),
+    radial-gradient(circle at 88% 18%, rgba(255,255,255,0.3) 0%, transparent 18%),
+    radial-gradient(circle at 72% 88%, rgba(255,255,255,0.2) 0%, transparent 25%),
+    linear-gradient(165deg, #81d4fa 0%, #a5d6a7 35%, #7cb342 68%, #558b2f 100%);
   border-radius: clamp(12px, 2vmin, 18px);
-  box-shadow: inset 0 0 30px rgba(0,0,0,0.12), 0 5px 18px rgba(0,0,0,0.12);
+  box-shadow:
+    inset 0 0 0 3px rgba(255,255,255,0.35),
+    inset 0 0 40px rgba(255,255,255,0.15),
+    0 8px 24px rgba(46,125,50,0.22);
   overflow: hidden;
   min-height: clamp(220px, 58vh, 560px);
+}
+.grid-wrap::before {
+  content: "";
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.14) 1.5px, transparent 1.5px);
+  background-size: 20px 20px;
+  opacity: 0.7;
+}
+.grid-wrap::after {
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: 0; height: 28%;
+  pointer-events: none; z-index: 0;
+  background: linear-gradient(to top, rgba(85,139,47,0.35) 0%, transparent 100%);
 }
 }
 
 @media (max-width: 480px) {
-  .controls-panels { max-height: 180px; }
   .cmd-block__label {
   flex: 1; min-width: 0;
   line-height: 1.15; text-align: left;
@@ -334,13 +385,32 @@ body:has(#screen-win.screen--active) .site-footer__author { color: rgba(120,53,1
   .grid-wrap {
   flex: 1; position: relative; width: 100%;
   display: flex; align-items: center; justify-content: center;
-  background: url("../assets/meadow.svg") center/cover no-repeat;
+  background:
+    radial-gradient(circle at 15% 12%, rgba(255,255,255,0.45) 0%, transparent 22%),
+    radial-gradient(circle at 88% 18%, rgba(255,255,255,0.3) 0%, transparent 18%),
+    radial-gradient(circle at 72% 88%, rgba(255,255,255,0.2) 0%, transparent 25%),
+    linear-gradient(165deg, #81d4fa 0%, #a5d6a7 35%, #7cb342 68%, #558b2f 100%);
   border-radius: clamp(12px, 2vmin, 18px);
-  box-shadow: inset 0 0 30px rgba(0,0,0,0.12), 0 5px 18px rgba(0,0,0,0.12);
+  box-shadow:
+    inset 0 0 0 3px rgba(255,255,255,0.35),
+    inset 0 0 40px rgba(255,255,255,0.15),
+    0 8px 24px rgba(46,125,50,0.22);
   overflow: hidden;
   min-height: clamp(220px, 58vh, 560px);
 }
-  .controls-panels { max-height: 130px; }
+.grid-wrap::before {
+  content: "";
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.14) 1.5px, transparent 1.5px);
+  background-size: 20px 20px;
+  opacity: 0.7;
+}
+.grid-wrap::after {
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: 0; height: 28%;
+  pointer-events: none; z-index: 0;
+  background: linear-gradient(to top, rgba(85,139,47,0.35) 0%, transparent 100%);
+}
   .site-footer { display: none; }
   #screen-start .subtitle { display: none; }
 }
@@ -376,6 +446,13 @@ body:has(#screen-win.screen--active) .site-footer__author { color: rgba(120,53,1
 
 @media (max-width: 520px) {
   .controls-panels {
-    grid-template-columns: minmax(100px, 1fr) minmax(100px, 1fr);
+    grid-template-columns: minmax(118px, 1fr) minmax(118px, 1fr);
   }
+}
+@media (max-height: 520px) {
+  .game-header { padding-top: 2px; }
+  .grid-wrap { min-height: clamp(180px, 52vh, 420px); }
+  .algorithm-slots { gap: 4px; }
+  .command-palette { gap: 4px; }
+  :root { --slot-h: clamp(32px, 6.5vmin, 38px); }
 }
