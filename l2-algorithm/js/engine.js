@@ -57,11 +57,11 @@ function getCellCenter(x, y) {
 
 function positionRobot(animate) {
   const { left, top } = getCellCenter(robotPos.x, robotPos.y);
-  const size = robotEl.offsetWidth || 44;
-  robotEl.style.left = `${left - size / 2}px`;
-  robotEl.style.top = `${top - size / 2}px`;
+  const size = robotWrapEl.offsetWidth || 44;
+  robotWrapEl.style.left = `${left - size / 2}px`;
+  robotWrapEl.style.top = `${top - size / 2}px`;
   robotEl.style.transform = `rotate(${DIRS[robotDir].angle}deg)`;
-  robotEl.style.transition = animate ? "" : "none";
+  robotWrapEl.style.transition = animate ? "" : "none";
 }
 
 function isWall(x, y) {
@@ -82,8 +82,8 @@ async function executeMoves(steps) {
     robotPos = { x: nx, y: ny };
     Sounds.move();
     positionRobot(true);
-    robotEl.classList.add("robot-sprite--bounce");
-    setTimeout(() => robotEl.classList.remove("robot-sprite--bounce"), 350);
+    robotWrapEl.classList.add("robot-wrap--bounce");
+    setTimeout(() => robotWrapEl.classList.remove("robot-wrap--bounce"), 350);
     await sleep(420);
   }
   return true;
@@ -94,8 +94,8 @@ async function executeCommand(cmdId) {
     robotDir = (robotDir + 1) % 4;
     Sounds.turn();
     positionRobot(true);
-    robotEl.classList.add("robot-sprite--bounce");
-    setTimeout(() => robotEl.classList.remove("robot-sprite--bounce"), 350);
+    robotWrapEl.classList.add("robot-wrap--bounce");
+    setTimeout(() => robotWrapEl.classList.remove("robot-wrap--bounce"), 350);
     await sleep(400);
     return true;
   }

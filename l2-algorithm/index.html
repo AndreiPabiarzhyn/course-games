@@ -2,15 +2,12 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Путь робота</title>
   <meta name="description" content="Составь алгоритм и проведи робота к цели">
   <meta name="author" content="Andrei Pabiarzhyn">
   <meta name="theme-color" content="#81c784">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="assets/favicon.svg">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -24,32 +21,47 @@
         <button id="btn-start" class="btn btn--primary btn--big" type="button">Играть!</button>
       </div>
     </section>
+
     <section id="screen-game" class="screen">
-      <div class="game-header">
+      <header class="game-header">
         <span id="level-badge" class="level-badge">Уровень 1 из 2</span>
-      </div>
-      <div class="game-layout">
-        <aside class="algorithm-panel">
-          <p class="algorithm-panel__title">Алгоритм</p>
-          <ol class="algorithm-slots" id="algorithm-slots"></ol>
-          <button id="btn-run" class="btn btn--run" type="button">▶ Запуск!</button>
-          <button id="btn-clear" class="btn btn--clear" type="button">Очистить</button>
-        </aside>
-        <div class="grid-wrap">
-          <div class="grid-board" id="grid-board"></div>
-          <img class="robot-sprite" id="robot" src="assets/robot.svg" alt="Робот" draggable="false">
+      </header>
+
+      <div class="game-main">
+        <div class="grid-area">
+          <div class="grid-wrap">
+            <div class="grid-board" id="grid-board"></div>
+            <div class="robot-wrap" id="robot-wrap">
+              <img class="robot-sprite" id="robot" src="assets/robot.svg" alt="Робот" draggable="false">
+            </div>
+          </div>
         </div>
-        <aside class="palette-panel">
-          <p class="palette-panel__title">Команды</p>
-          <p class="palette-panel__hint">👆 Потяни в слот</p>
-          <div class="command-palette" id="command-palette"></div>
+
+        <aside class="controls-area">
+          <div class="controls-panels">
+            <section class="panel algorithm-panel">
+              <h2 class="panel__title">Алгоритм</h2>
+              <ol class="algorithm-slots" id="algorithm-slots"></ol>
+            </section>
+            <section class="panel palette-panel">
+              <h2 class="panel__title">Команды</h2>
+              <p class="panel__hint">👆 Потяни в слот</p>
+              <div class="command-palette" id="command-palette"></div>
+            </section>
+          </div>
+          <div class="controls-actions">
+            <button id="btn-run" class="btn btn--run" type="button">▶ Запуск!</button>
+            <button id="btn-clear" class="btn btn--clear" type="button">Очистить</button>
+          </div>
         </aside>
       </div>
+
       <div id="level-popup" class="level-popup" hidden>
         <div class="level-popup__stars" aria-hidden="true">⭐⭐</div>
         <p class="level-popup__text">Отлично!</p>
       </div>
     </section>
+
     <section id="screen-win" class="screen">
       <div class="confetti" id="confetti" aria-hidden="true"></div>
       <div class="screen__content">
@@ -62,9 +74,13 @@
       </div>
     </section>
   </div>
+
   <footer class="site-footer">
     <p>Created by <span class="site-footer__author">Andrei Pabiarzhyn</span></p>
   </footer>
+
+  <div id="drag-ghost" class="drag-ghost" hidden></div>
+
   <script src="js/config.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/engine.js"></script>

@@ -1,9 +1,9 @@
 const COMMANDS = {
-  forward:  { id: "forward",  label: "\u0412\u043f\u0435\u0440\u0451\u0434",   icon: "\u25b6",  class: "cmd-block--forward" },
-  forward2: { id: "forward2", label: "\u0412\u043f\u0435\u0440\u0451\u0434 x2", icon: "\u25b6\u25b6", class: "cmd-block--forward2" },
-  right:    { id: "right",    label: "\u041d\u0430\u043f\u0440\u0430\u0432\u043e",  icon: "\u21b7",  class: "cmd-block--right" },
-  up:       { id: "up",       label: "\u0412\u0432\u0435\u0440\u0445",    icon: "\u25b2",  class: "cmd-block--up" },
-  down:     { id: "down",     label: "\u0412\u043d\u0438\u0437",     icon: "\u25bc",  class: "cmd-block--down" },
+  forward:  { id: "forward",  label: "\u0412\u043f\u0435\u0440\u0451\u0434",   icon: "assets/icon-forward.svg",  class: "cmd-block--forward" },
+  forward2: { id: "forward2", label: "\u0412\u043f\u0435\u0440\u0451\u0434 x2", icon: "assets/icon-forward2.svg", class: "cmd-block--forward2" },
+  right:    { id: "right",    label: "\u041d\u0430\u043f\u0440\u0430\u0432\u043e",  icon: "assets/icon-right.svg",    class: "cmd-block--right" },
+  up:       { id: "up",       label: "\u0412\u0432\u0435\u0440\u0445",    icon: "assets/icon-up.svg",       class: "cmd-block--up" },
+  down:     { id: "down",     label: "\u0412\u043d\u0438\u0437",     icon: "assets/icon-down.svg",     class: "cmd-block--down" },
 };
 
 const PALETTE_ORDER = ["forward", "forward2", "right", "up", "down"];

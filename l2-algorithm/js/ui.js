@@ -1,12 +1,30 @@
+function iconHtml(cmdId) {
+  const def = COMMANDS[cmdId];
+  return `<span class="cmd-block__icon" aria-hidden="true"><img src="${def.icon}" alt=""></span>`;
+}
+
 function createCmdBlock(cmdId, source) {
   const def = COMMANDS[cmdId];
   const btn = document.createElement("button");
   btn.type = "button";
   btn.className = `cmd-block ${def.class} ${source === "palette" ? "cmd-block--palette" : "cmd-block--in-slot"}`;
   btn.dataset.cmd = cmdId;
-  btn.innerHTML = `<span class="cmd-block__icon">${def.icon}</span><span>${def.label}</span>`;
+  btn.innerHTML = `${iconHtml(cmdId)}<span class="cmd-block__label">${def.label}</span>`;
   btn.addEventListener("pointerdown", (e) => startDrag(e, cmdId, source, btn));
   return btn;
+}
+
+function showGhost(cmdId, x, y) {
+  const def = COMMANDS[cmdId];
+  dragGhostEl.hidden = false;
+  dragGhostEl.className = `drag-ghost ${def.class}`;
+  dragGhostEl.innerHTML = `${iconHtml(cmdId)}<span class="cmd-block__label">${def.label}</span>`;
+  moveGhost(x, y);
+}
+
+function hideGhost() {
+  dragGhostEl.hidden = true;
+  dragGhostEl.innerHTML = "";
 }
 
 function buildPalette() {
@@ -50,15 +68,15 @@ function findSlotIndex(el) {
   return slot ? Number(slot.dataset.index) : null;
 }
 
-function moveGhost(e) {
-  if (!dragState) return;
-  const g = dragState.ghost;
-  g.style.left = `${e.clientX - g.offsetWidth / 2}px`;
-  g.style.top = `${e.clientY - g.offsetHeight / 2}px`;
+function moveGhost(x, y) {
+  const w = dragGhostEl.offsetWidth || 120;
+  const h = dragGhostEl.offsetHeight || 44;
+  dragGhostEl.style.left = `${x - w / 2}px`;
+  dragGhostEl.style.top = `${y - h / 2}px`;
 }
 
 function onDragMove(e) {
-  moveGhost(e);
+  moveGhost(e.clientX, e.clientY);
   document.querySelectorAll(".algorithm-slot").forEach((s) => s.classList.remove("algorithm-slot--over"));
   const slot = document.elementFromPoint(e.clientX, e.clientY)?.closest(".algorithm-slot");
   if (slot) slot.classList.add("algorithm-slot--over");
@@ -69,9 +87,9 @@ function onDragEnd(e) {
   document.removeEventListener("pointerup", onDragEnd);
   document.removeEventListener("pointercancel", onDragEnd);
   document.querySelectorAll(".algorithm-slot").forEach((s) => s.classList.remove("algorithm-slot--over"));
+  hideGhost();
   if (!dragState) return;
-  const { cmdId, source, ghost, slotIndex } = dragState;
-  ghost.remove();
+  const { cmdId, source, slotIndex } = dragState;
   const slotEl = document.elementFromPoint(e.clientX, e.clientY)?.closest(".algorithm-slot");
   if (slotEl) {
     const idx = Number(slotEl.dataset.index);
@@ -91,15 +109,8 @@ function startDrag(e, cmdId, source, el) {
   if (isRunning) return;
   e.preventDefault();
   el.setPointerCapture(e.pointerId);
-  const ghost = createCmdBlock(cmdId, source);
-  ghost.style.position = "fixed";
-  ghost.style.zIndex = "200";
-  ghost.style.pointerEvents = "none";
-  ghost.style.opacity = "0.92";
-  ghost.style.transform = "scale(1.08)";
-  document.body.appendChild(ghost);
-  dragState = { cmdId, source, ghost, slotIndex: source === "slot" ? findSlotIndex(el) : null };
-  moveGhost(e);
+  dragState = { cmdId, source, slotIndex: source === "slot" ? findSlotIndex(el) : null };
+  showGhost(cmdId, e.clientX, e.clientY);
   document.addEventListener("pointermove", onDragMove);
   document.addEventListener("pointerup", onDragEnd);
   document.addEventListener("pointercancel", onDragEnd);
@@ -124,8 +135,10 @@ const algorithmSlotsEl = document.getElementById("algorithm-slots");
 const commandPaletteEl = document.getElementById("command-palette");
 const gridBoardEl = document.getElementById("grid-board");
 const gridWrapEl = document.querySelector(".grid-wrap");
+const robotWrapEl = document.getElementById("robot-wrap");
 const robotEl = document.getElementById("robot");
 const confettiEl = document.getElementById("confetti");
+const dragGhostEl = document.getElementById("drag-ghost");
 
 btnStart.addEventListener("click", startGame);
 btnRestart.addEventListener("click", restartGame);
