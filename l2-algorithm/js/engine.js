@@ -4,7 +4,6 @@ let grid = [];
 let startPos = { x: 0, y: 0 };
 let goalPos = { x: 0, y: 0 };
 let robotPos = { x: 0, y: 0 };
-let robotDir = 0;
 let isRunning = false;
 let dragState = null;
 
@@ -19,7 +18,6 @@ function parseLevel(levelDef) {
     }
   }
   robotPos = { ...startPos };
-  robotDir = 0;
 }
 
 function sizeGridCells() {
@@ -77,64 +75,42 @@ function positionRobot(animate) {
   const size = robotWrapEl.offsetWidth || 48;
   robotWrapEl.style.left = `${left - size / 2}px`;
   robotWrapEl.style.top = `${top - size / 2}px`;
-  robotEl.style.transform = `rotate(${DIRS[robotDir].angle}deg)`;
   robotWrapEl.style.transition = animate ? "" : "none";
+}
+
+function setRobotAngle(angle, animate) {
+  robotEl.style.transition = animate ? "transform 0.2s ease" : "none";
+  robotEl.style.transform = `rotate(${angle}deg)`;
 }
 
 function isWall(x, y) {
   return y < 0 || y >= grid.length || x < 0 || x >= grid[0].length || grid[y][x] === "#";
 }
 
-async function executeMoves(steps) {
-  for (let i = 0; i < steps; i++) {
-    const { dx, dy } = DIRS[robotDir];
-    const nx = robotPos.x + dx;
-    const ny = robotPos.y + dy;
-    if (isWall(nx, ny)) {
-      gridWrapEl.classList.add("grid-wrap--shake");
-      Sounds.wrong();
-      setTimeout(() => gridWrapEl.classList.remove("grid-wrap--shake"), 400);
-      return false;
-    }
-    robotPos = { x: nx, y: ny };
-    Sounds.move();
-    positionRobot(true);
-    robotWrapEl.classList.add("robot-wrap--bounce");
-    setTimeout(() => robotWrapEl.classList.remove("robot-wrap--bounce"), 350);
-    await sleep(420);
-  }
-  return true;
-}
-
 async function executeCommand(cmdId) {
-  if (cmdId === "right") {
-    robotDir = (robotDir + 1) % 4;
-    Sounds.turn();
-    positionRobot(true);
-    robotWrapEl.classList.add("robot-wrap--bounce");
-    setTimeout(() => robotWrapEl.classList.remove("robot-wrap--bounce"), 350);
-    await sleep(400);
-    return true;
+  const move = MOVE[cmdId];
+  if (!move) return false;
+
+  setRobotAngle(move.angle, true);
+  Sounds.turn();
+  await sleep(180);
+
+  const nx = robotPos.x + move.dx;
+  const ny = robotPos.y + move.dy;
+  if (isWall(nx, ny)) {
+    gridWrapEl.classList.add("grid-wrap--shake");
+    Sounds.wrong();
+    setTimeout(() => gridWrapEl.classList.remove("grid-wrap--shake"), 400);
+    return false;
   }
-  if (cmdId === "up") {
-    const prev = robotDir;
-    robotDir = 3;
-    Sounds.turn();
-    positionRobot(true);
-    await sleep(200);
-    robotDir = prev;
-    return executeMoves(1);
-  }
-  if (cmdId === "down") {
-    const prev = robotDir;
-    robotDir = 1;
-    Sounds.turn();
-    positionRobot(true);
-    await sleep(200);
-    robotDir = prev;
-    return executeMoves(1);
-  }
-  return executeMoves(1);
+
+  robotPos = { x: nx, y: ny };
+  Sounds.move();
+  positionRobot(true);
+  robotWrapEl.classList.add("robot-wrap--bounce");
+  setTimeout(() => robotWrapEl.classList.remove("robot-wrap--bounce"), 350);
+  await sleep(420);
+  return true;
 }
 
 async function runAlgorithm() {
@@ -144,8 +120,9 @@ async function runAlgorithm() {
   isRunning = true;
   btnRun.disabled = true;
   robotPos = { ...startPos };
-  robotDir = 0;
+  setRobotAngle(MOVE.right.angle, false);
   positionRobot(false);
+
   for (const cmdId of program) {
     const ok = await executeCommand(cmdId);
     if (!ok) {
@@ -153,12 +130,13 @@ async function runAlgorithm() {
       btnRun.disabled = false;
       await sleep(600);
       robotPos = { ...startPos };
-      robotDir = 0;
+      setRobotAngle(MOVE.right.angle, false);
       positionRobot(true);
       return;
     }
     if (robotPos.x === goalPos.x && robotPos.y === goalPos.y) break;
   }
+
   if (robotPos.x === goalPos.x && robotPos.y === goalPos.y) {
     gridWrapEl.classList.add("grid-wrap--success");
     Sounds.levelUp();
@@ -182,9 +160,10 @@ async function runAlgorithm() {
     setTimeout(() => gridWrapEl.classList.remove("grid-wrap--shake"), 400);
     await sleep(700);
     robotPos = { ...startPos };
-    robotDir = 0;
+    setRobotAngle(MOVE.right.angle, false);
     positionRobot(true);
   }
+
   isRunning = false;
   btnRun.disabled = false;
 }

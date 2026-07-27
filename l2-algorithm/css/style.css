@@ -220,11 +220,10 @@ html, body {
 .cmd-block:active { cursor: grabbing; transform: scale(1.04); }
 .cmd-block--in-slot { min-height: 32px; padding: 4px 6px; }
 
-.cmd-block--forward  { background: #66ff7e; }
-.cmd-block--right    { background: #9966ff; color: #fff; }
+.cmd-block--right { background: #66ff7e; }
+.cmd-block--left  { background: #66b3ff; }
 .cmd-block--up       { background: #66ffe5; }
 .cmd-block--down     { background: #ff66f6; color: #fff; }
-.cmd-block--right .cmd-block__label,
 .cmd-block--down .cmd-block__label { color: #fff; }
 
 .cmd-block__icon {
