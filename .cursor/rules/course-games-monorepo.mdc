@@ -1,0 +1,30 @@
+---
+description: Monorepo layout for Andrei Pabiarzhyn course games on GitHub Pages
+alwaysApply: true
+---
+
+# Course games monorepo
+
+This repository hosts multiple student games under separate folders.
+
+## Structure
+
+```
+course-games/
+  index.html           # empty root — NO game list, NO navigation
+  shared/              # shared CSS (footer, etc.)
+  fix-wiring/          # game 1 — self-contained (index.html, css/, js/, assets/)
+  l2-.../              # future games
+```
+
+## Rules
+
+- **Never** add a central menu linking all games on the root or shared pages.
+- Each game folder is self-contained with relative asset paths.
+- Student access: **direct URL only** (`/fix-wiring/`, `/l2-slug/`).
+- Use non-obvious folder slugs for new games when privacy matters.
+- Always include author footer per `author-footer.mdc`.
+
+## New game
+
+Copy `fix-wiring/` folder, rename, customize. Do not link it from root `index.html`.

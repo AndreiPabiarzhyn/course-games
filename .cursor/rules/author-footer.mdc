@@ -1,0 +1,57 @@
+---
+description: Author footer and meta for Andrei Pabiarzhyn web projects
+globs: **/*.{html,htm,css,tsx,jsx,vue,svelte}
+alwaysApply: false
+---
+
+# Author attribution — Andrei Pabiarzhyn
+
+When creating or editing **user-facing web pages** (games, landing pages, demos, GitHub Pages sites), always include author attribution unless the user opts out.
+
+## Footer (required)
+
+Fixed footer at bottom of every page/screen, subtle, non-intrusive:
+
+```html
+<footer class="site-footer">
+  <p>Created by <span class="site-footer__author">Andrei Pabiarzhyn</span></p>
+</footer>
+```
+
+```css
+.site-footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  padding: 8px 16px calc(8px + env(safe-area-inset-bottom));
+  text-align: center;
+  pointer-events: none;
+}
+
+.site-footer p {
+  margin: 0;
+  font-size: clamp(0.72rem, 2vw, 0.85rem);
+  font-weight: 600;
+  color: rgba(26, 35, 126, 0.5);
+}
+
+.site-footer__author {
+  font-weight: 800;
+  color: rgba(26, 35, 126, 0.65);
+}
+```
+
+Adapt colors to match the page background; keep `pointer-events: none` so it never blocks clicks.
+
+## HTML head
+
+```html
+<meta name="author" content="Andrei Pabiarzhyn">
+```
+
+## Wording
+
+- Default text: **Created by Andrei Pabiarzhyn** (not name alone).
+- Do not add links or a sitemap unless requested.

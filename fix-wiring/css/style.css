@@ -52,13 +52,22 @@ html, body {
 .site-footer p {
   margin: 0;
   font-size: clamp(0.72rem, 2vw, 0.85rem);
-  font-weight: 700;
-  color: rgba(26, 35, 126, 0.55);
+  font-weight: 600;
+  color: rgba(26, 35, 126, 0.5);
   letter-spacing: 0.02em;
 }
 
+.site-footer__author {
+  font-weight: 800;
+  color: rgba(26, 35, 126, 0.65);
+}
+
 body:has(#screen-win.screen--active) .site-footer p {
-  color: rgba(120, 53, 15, 0.55);
+  color: rgba(120, 53, 15, 0.5);
+}
+
+body:has(#screen-win.screen--active) .site-footer__author {
+  color: rgba(120, 53, 15, 0.7);
 }
 
 /* ===== Screens ===== */
