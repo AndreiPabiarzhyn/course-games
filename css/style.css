@@ -37,6 +37,30 @@ html, body {
   position: relative;
 }
 
+/* ===== Footer ===== */
+.site-footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  padding: 8px 16px calc(8px + env(safe-area-inset-bottom));
+  text-align: center;
+  pointer-events: none;
+}
+
+.site-footer p {
+  margin: 0;
+  font-size: clamp(0.72rem, 2vw, 0.85rem);
+  font-weight: 700;
+  color: rgba(26, 35, 126, 0.55);
+  letter-spacing: 0.02em;
+}
+
+body:has(#screen-win.screen--active) .site-footer p {
+  color: rgba(120, 53, 15, 0.55);
+}
+
 /* ===== Screens ===== */
 .screen {
   position: absolute;
