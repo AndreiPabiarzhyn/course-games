@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Сквозь звёзды</title>
+  <meta name="description" content="Управляй ракетой и пролети сквозь звёзды, уклоняясь от астероидов">
+  <meta name="author" content="Andrei Pabiarzhyn">
+  <meta name="theme-color" content="#0d1b3e">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+    <section id="screen-start" class="screen screen--active">
+      <div class="screen__content">
+        <img class="start-rocket" src="assets/rocket-1.svg" alt="" draggable="false">
+        <h1 class="title">Сквозь<br>звёзды</h1>
+        <p class="subtitle">Управляй ракетой стрелками<br>и продержись 30 секунд!</p>
+        <button id="btn-start" class="btn btn--primary btn--big" type="button">Играть!</button>
+      </div>
+    </section>
+
+    <section id="screen-game" class="screen">
+      <header class="game-header">
+        <span class="time-badge">Время: <span id="time-value">0</span> с</span>
+        <span class="goal-badge">Цель: 30 с</span>
+      </header>
+      <div class="game-stage-wrap">
+        <canvas id="game-canvas" width="480" height="360" aria-label="Игровое поле"></canvas>
+      </div>
+      <p class="controls-hint">Стрелки — движение. Клик по астероиду — уничтожить.</p>
+    </section>
+
+    <section id="screen-win" class="screen">
+      <div class="screen__content">
+        <img class="result-rocket" src="assets/rocket-2.svg" alt="" draggable="false">
+        <h2 class="result-title">Победа!</h2>
+        <p class="result-score">Твоё время: <strong id="win-score">0</strong> секунд</p>
+        <button id="btn-restart-win" class="btn btn--primary btn--big" type="button">Ещё раз</button>
+      </div>
+    </section>
+
+    <section id="screen-lose" class="screen">
+      <div class="screen__content">
+        <img class="result-asteroid" src="assets/asteroid-1.svg?v=3" alt="" draggable="false">
+        <h2 class="result-title result-title--lose">Столкновение!</h2>
+        <p class="result-score">Попробуй ещё раз</p>
+        <button id="btn-restart-lose" class="btn btn--primary btn--big" type="button">Заново</button>
+      </div>
+    </section>
+  </div>
+
+  <footer class="site-footer">
+    <p>Created by <span class="site-footer__author">Andrei Pabiarzhyn</span></p>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>
