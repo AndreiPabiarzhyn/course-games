@@ -6,7 +6,7 @@
   --btn-hover: #ff8f00;
   --btn-shadow: #e65100;
   --panel: rgba(255,255,255,0.92);
-  --slot-h: clamp(38px, 8vmin, 48px);
+  --slot-h: clamp(34px, 7vmin, 42px);
 }
 
 html, body {
@@ -71,26 +71,26 @@ html, body {
 
 .game-main {
   flex: 1; min-height: 0;
-  display: flex; gap: clamp(8px, 1.5vmin, 14px);
-  width: min(100%, 1100px);
+  display: flex; gap: clamp(8px, 1.2vmin, 12px);
+  width: min(100%, 1200px);
   margin: 0 auto;
-  padding: 0 clamp(6px, 1.5vw, 12px) clamp(28px, 4vmin, 36px);
+  padding: 0 clamp(6px, 1.2vw, 12px) clamp(24px, 3vmin, 32px);
 }
 
 /* Grid — biggest area */
 .grid-area {
-  flex: 1 1 58%;
+  flex: 1 1 72%;
   min-width: 0; min-height: 0;
   display: flex;
 }
 .grid-wrap {
-  flex: 1; position: relative;
+  flex: 1; position: relative; width: 100%;
   display: flex; align-items: center; justify-content: center;
   background: url("../assets/meadow.svg") center/cover no-repeat;
   border-radius: clamp(12px, 2vmin, 18px);
   box-shadow: inset 0 0 30px rgba(0,0,0,0.12), 0 5px 18px rgba(0,0,0,0.12);
   overflow: hidden;
-  min-height: clamp(180px, 42vmin, 420px);
+  min-height: clamp(220px, 58vh, 560px);
 }
 .grid-board {
   display: grid; gap: 3px;
@@ -98,8 +98,8 @@ html, body {
   position: relative; z-index: 1;
 }
 .grid-cell {
-  width: clamp(36px, 9vmin, 56px);
-  height: clamp(36px, 9vmin, 56px);
+  width: var(--cell-size, 52px);
+  height: var(--cell-size, 52px);
   border-radius: 8px;
 }
 .grid-cell--floor { background: rgba(255,255,255,0.18); }
@@ -116,7 +116,7 @@ html, body {
 
 .robot-wrap {
   position: absolute; z-index: 5; pointer-events: none;
-  width: clamp(40px, 10vmin, 58px);
+  width: calc(var(--cell-size, 52px) * 1.2);
   transition: left 0.35s ease, top 0.35s ease;
 }
 .robot-sprite { width: 100%; height: auto; display: block; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.35)); transition: transform 0.25s ease; }
@@ -130,10 +130,9 @@ html, body {
 
 /* Controls sidebar — slots + palette side by side */
 .controls-area {
-  flex: 0 1 42%;
-  min-width: min(100%, 320px);
-  max-width: 420px;
-  display: flex; flex-direction: column; gap: 8px;
+  flex: 0 0 clamp(240px, 26%, 300px);
+  max-width: 300px;
+  display: flex; flex-direction: column; gap: 6px;
   min-height: 0;
 }
 .controls-panels {
@@ -221,7 +220,6 @@ html, body {
 .cmd-block--in-slot { min-height: 32px; padding: 2px 6px; font-size: 0.68rem; }
 
 .cmd-block--forward  { background: #66ff7e; }
-.cmd-block--forward2 { background: #c5ff66; }
 .cmd-block--right    { background: #9966ff; color: #fff; }
 .cmd-block--up       { background: #66ffe5; }
 .cmd-block--down     { background: #ff66f6; color: #fff; }
@@ -284,13 +282,33 @@ body:has(#screen-win.screen--active) .site-footer__author { color: rgba(120,53,1
 /* ===== RESPONSIVE / Genially embed ===== */
 @media (max-width: 720px), (max-height: 520px) {
   .game-main {
-    flex-direction: column;
-    padding-bottom: clamp(24px, 3vmin, 32px);
-  }
-  .grid-area { flex: 1 1 auto; min-height: clamp(160px, 38vh, 280px); }
-  .controls-area { flex: 0 0 auto; max-width: none; width: 100%; }
+  flex: 1; min-height: 0;
+  display: flex; gap: clamp(8px, 1.2vmin, 12px);
+  width: min(100%, 1200px);
+  margin: 0 auto;
+  padding: 0 clamp(6px, 1.2vw, 12px) clamp(24px, 3vmin, 32px);
+}
+  .grid-area {
+  flex: 1 1 72%;
+  min-width: 0; min-height: 0;
+  display: flex;
+}
+  .controls-area {
+  flex: 0 0 clamp(240px, 26%, 300px);
+  max-width: 300px;
+  display: flex; flex-direction: column; gap: 6px;
+  min-height: 0;
+}
   .controls-panels { grid-template-columns: 1fr 1fr; max-height: clamp(140px, 28vh, 200px); }
-  .grid-wrap { min-height: clamp(150px, 34vh, 260px); }
+  .grid-wrap {
+  flex: 1; position: relative; width: 100%;
+  display: flex; align-items: center; justify-content: center;
+  background: url("../assets/meadow.svg") center/cover no-repeat;
+  border-radius: clamp(12px, 2vmin, 18px);
+  box-shadow: inset 0 0 30px rgba(0,0,0,0.12), 0 5px 18px rgba(0,0,0,0.12);
+  overflow: hidden;
+  min-height: clamp(220px, 58vh, 560px);
+}
 }
 
 @media (max-width: 480px) {
@@ -301,7 +319,15 @@ body:has(#screen-win.screen--active) .site-footer__author { color: rgba(120,53,1
 
 @media (max-height: 400px) {
   .game-header { display: none; }
-  .grid-wrap { min-height: 120px; }
+  .grid-wrap {
+  flex: 1; position: relative; width: 100%;
+  display: flex; align-items: center; justify-content: center;
+  background: url("../assets/meadow.svg") center/cover no-repeat;
+  border-radius: clamp(12px, 2vmin, 18px);
+  box-shadow: inset 0 0 30px rgba(0,0,0,0.12), 0 5px 18px rgba(0,0,0,0.12);
+  overflow: hidden;
+  min-height: clamp(220px, 58vh, 560px);
+}
   .controls-panels { max-height: 130px; }
   .site-footer { display: none; }
   #screen-start .subtitle { display: none; }

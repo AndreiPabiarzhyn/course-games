@@ -144,5 +144,5 @@ btnStart.addEventListener("click", startGame);
 btnRestart.addEventListener("click", restartGame);
 btnRun.addEventListener("click", runAlgorithm);
 btnClear.addEventListener("click", clearSlots);
-window.addEventListener("resize", () => positionRobot(false));
+window.addEventListener("resize", () => { sizeGridCells(); positionRobot(false); });
 buildPalette();

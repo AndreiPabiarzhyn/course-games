@@ -22,12 +22,26 @@ function parseLevel(levelDef) {
   robotDir = 0;
 }
 
+function sizeGridCells() {
+  const cols = grid[0]?.length || 6;
+  const rows = grid.length || 6;
+  const pad = 20;
+  const w = gridWrapEl.clientWidth - pad;
+  const h = gridWrapEl.clientHeight - pad;
+  if (w <= 0 || h <= 0) return;
+  const gap = 3;
+  const cell = Math.floor(Math.min((w - gap * (cols - 1)) / cols, (h - gap * (rows - 1)) / rows));
+  const size = Math.max(40, Math.min(cell, 96));
+  document.documentElement.style.setProperty("--cell-size", `${size}px`);
+}
+
 function buildGrid() {
   const levelDef = LEVELS[currentLevel];
   parseLevel(levelDef);
   gridWrapEl.style.backgroundImage = `url("${levelDef.bg}")`;
   gridBoardEl.innerHTML = "";
-  gridBoardEl.style.gridTemplateColumns = `repeat(${grid[0].length}, 1fr)`;
+  gridBoardEl.style.gridTemplateColumns = `repeat(${grid[0].length}, var(--cell-size, 48px))`;
+  gridBoardEl.style.gridTemplateRows = `repeat(${grid.length}, var(--cell-size, 48px))`;
   for (let y = 0; y < grid.length; y++) {
     for (let x = 0; x < grid[y].length; x++) {
       const cell = document.createElement("div");
@@ -41,7 +55,10 @@ function buildGrid() {
       gridBoardEl.appendChild(cell);
     }
   }
-  requestAnimationFrame(() => positionRobot(false));
+  requestAnimationFrame(() => {
+    sizeGridCells();
+    positionRobot(false);
+  });
 }
 
 function getCellCenter(x, y) {
@@ -57,7 +74,7 @@ function getCellCenter(x, y) {
 
 function positionRobot(animate) {
   const { left, top } = getCellCenter(robotPos.x, robotPos.y);
-  const size = robotWrapEl.offsetWidth || 44;
+  const size = robotWrapEl.offsetWidth || 48;
   robotWrapEl.style.left = `${left - size / 2}px`;
   robotWrapEl.style.top = `${top - size / 2}px`;
   robotEl.style.transform = `rotate(${DIRS[robotDir].angle}deg)`;
@@ -104,7 +121,7 @@ async function executeCommand(cmdId) {
     robotDir = 3;
     Sounds.turn();
     positionRobot(true);
-    await sleep(250);
+    await sleep(200);
     robotDir = prev;
     return executeMoves(1);
   }
@@ -113,11 +130,11 @@ async function executeCommand(cmdId) {
     robotDir = 1;
     Sounds.turn();
     positionRobot(true);
-    await sleep(250);
+    await sleep(200);
     robotDir = prev;
     return executeMoves(1);
   }
-  return executeMoves(cmdId === "forward2" ? 2 : 1);
+  return executeMoves(1);
 }
 
 async function runAlgorithm() {
