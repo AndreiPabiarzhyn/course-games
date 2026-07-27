@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Путь робота</title>
+  <meta name="description" content="Составь алгоритм и проведи робота к цели">
+  <meta name="author" content="Andrei Pabiarzhyn">
+  <meta name="theme-color" content="#81c784">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+    <section id="screen-start" class="screen screen--active">
+      <div class="screen__content">
+        <div class="start-mascot" aria-hidden="true">🤖</div>
+        <h1 class="title">Путь<br>робота</h1>
+        <p class="subtitle">Составь алгоритм<br>и доведи робота до цели</p>
+        <button id="btn-start" class="btn btn--primary btn--big" type="button">Играть!</button>
+      </div>
+    </section>
+    <section id="screen-game" class="screen">
+      <div class="game-header">
+        <span id="level-badge" class="level-badge">Уровень 1 из 2</span>
+      </div>
+      <div class="game-layout">
+        <aside class="algorithm-panel">
+          <p class="algorithm-panel__title">Алгоритм</p>
+          <ol class="algorithm-slots" id="algorithm-slots"></ol>
+          <button id="btn-run" class="btn btn--run" type="button">▶ Запуск!</button>
+          <button id="btn-clear" class="btn btn--clear" type="button">Очистить</button>
+        </aside>
+        <div class="grid-wrap">
+          <div class="grid-board" id="grid-board"></div>
+          <img class="robot-sprite" id="robot" src="assets/robot.svg" alt="Робот" draggable="false">
+        </div>
+        <aside class="palette-panel">
+          <p class="palette-panel__title">Команды</p>
+          <p class="palette-panel__hint">👆 Потяни в слот</p>
+          <div class="command-palette" id="command-palette"></div>
+        </aside>
+      </div>
+      <div id="level-popup" class="level-popup" hidden>
+        <div class="level-popup__stars" aria-hidden="true">⭐⭐</div>
+        <p class="level-popup__text">Отлично!</p>
+      </div>
+    </section>
+    <section id="screen-win" class="screen">
+      <div class="confetti" id="confetti" aria-hidden="true"></div>
+      <div class="screen__content">
+        <h2 class="win-title">Ты молодец!</h2>
+        <div class="win-cat-wrap">
+          <img class="win-cat" src="assets/victory-cat.png" alt="Радостный котик" draggable="false">
+        </div>
+        <p class="win-subtitle">Робот дошёл до цели!</p>
+        <button id="btn-restart" class="btn btn--primary btn--big" type="button">Начать заново</button>
+      </div>
+    </section>
+  </div>
+  <footer class="site-footer">
+    <p>Created by <span class="site-footer__author">Andrei Pabiarzhyn</span></p>
+  </footer>
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/ui.js"></script>
+</body>
+</html>
