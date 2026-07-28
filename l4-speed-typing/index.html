@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Скоростная печать</title>
+  <meta name="description" content="Набери клавиши по порядку, пока ракета не улетела!">
+  <meta name="author" content="Andrei Pabiarzhyn">
+  <meta name="theme-color" content="#0d1b3e">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+    <section id="screen-start" class="screen screen--active">
+      <div class="screen__content">
+        <h1 class="title">Скоростная печать</h1>
+        <p class="subtitle">Набери клавиши по порядку,<br>пока ракета не улетела!</p>
+        <div class="lang-picker">
+          <p class="lang-picker__label">Какие буквы вводить</p>
+          <div class="lang-picker__btns">
+            <button id="btn-lang-en" class="btn btn--lang" type="button" data-lang="en">English</button>
+            <button id="btn-lang-ru" class="btn btn--lang btn--lang-active" type="button" data-lang="ru">Русский</button>
+          </div>
+        </div>
+        <button id="btn-start" class="btn btn--primary btn--big" type="button">Играть!</button>
+      </div>
+    </section>
+
+    <section id="screen-game" class="screen">
+      <div class="game-layout">
+        <div class="game-stack">
+          <div class="game-stage-wrap">
+            <canvas id="game-canvas" width="480" height="360" aria-label="Игровое поле"></canvas>
+            <p id="ready-msg" class="overlay-msg overlay-msg--ready" hidden>Приготовься!</p>
+            <p id="cheer-msg" class="overlay-msg overlay-msg--cheer" hidden>Молодец!</p>
+            <p id="transition-msg" class="overlay-msg overlay-msg--transition" hidden></p>
+            <p id="wrong-msg" class="overlay-msg overlay-msg--wrong" hidden>Не та клавиша!</p>
+          </div>
+          <div class="game-bottom">
+            <div id="virtual-keyboard" class="vkbd" aria-label="Подсказка клавиатуры"></div>
+            <aside class="game-stats" aria-label="Статус игры">
+              <span class="level-badge">Уровень <span id="level-value">1</span>/3</span>
+              <span class="progress-badge">Клавиши: <span id="progress-value">0</span>/9</span>
+              <span class="time-badge">Время: <span id="time-value">120</span> с</span>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-win" class="screen">
+      <div class="win-confetti" id="win-confetti" aria-hidden="true"></div>
+      <div class="screen__content screen__content--win">
+        <div class="win-showcase">
+          <img class="win-showcase__gif" src="assets/win/celebration.gif" alt="" draggable="false">
+        </div>
+        <h2 class="result-title">Победа!</h2>
+        <p id="win-stars" class="win-stars"></p>
+        <p class="result-score">Все 3 уровня пройдены</p>
+        <button id="btn-restart-win" class="btn btn--primary btn--big" type="button">Ещё раз</button>
+      </div>
+    </section>
+
+    <section id="screen-lose" class="screen">
+      <div class="screen__content">
+        <img class="result-icon result-icon--lose" src="assets/enemy/1.png" alt="" draggable="false">
+        <h2 class="result-title result-title--lose">Не успел!</h2>
+        <p class="result-score">Ракета улетела — попробуй ещё</p>
+        <button id="btn-restart-lose" class="btn btn--primary btn--big" type="button">Заново</button>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <p>Created by <span class="site-footer__author">Andrei Pabiarzhyn</span></p>
+    </footer>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>
