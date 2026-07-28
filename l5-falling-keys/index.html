@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Падающие клавиши</title>
+  <meta name="description" content="Лови падающие буквы и цифры — успей нажать до линии!">
+  <meta name="author" content="Andrei Pabiarzhyn">
+  <meta name="theme-color" content="#1a472a">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+    <section id="screen-start" class="screen screen--active">
+      <div class="start-bg" aria-hidden="true"></div>
+      <div class="start-keys" aria-hidden="true">
+        <span class="start-keys__key start-keys__key--a">A</span>
+        <span class="start-keys__key start-keys__key--5">5</span>
+        <span class="start-keys__key start-keys__key--k">K</span>
+        <span class="start-keys__key start-keys__key--9">9</span>
+      </div>
+      <div class="screen__content screen__content--start">
+        <div class="start-card">
+          <p class="start-badge">Arcade</p>
+          <h1 class="title">Падающие клавиши</h1>
+          <p class="subtitle">Нажимай буквы и цифры на клавиатуре,<br>пока они не упали на линию!<br>Кликай по смайликам — они взрываются!</p>
+          <div class="lang-picker">
+            <p class="lang-picker__label">Какие символы падать</p>
+            <div class="lang-picker__btns">
+              <button id="btn-lang-en" class="btn btn--lang" type="button" data-lang="en">English</button>
+              <button id="btn-lang-ru" class="btn btn--lang btn--lang-active" type="button" data-lang="ru">Русский</button>
+            </div>
+          </div>
+          <button id="btn-start" class="btn btn--primary btn--big" type="button">Играть!</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-game" class="screen">
+      <div class="game-layout">
+        <div class="game-stack">
+          <div class="game-stage-wrap">
+            <canvas id="game-canvas" width="960" height="720" aria-label="Игровое поле"></canvas>
+            <p id="ready-msg" class="overlay-msg overlay-msg--ready" hidden>Приготовься!</p>
+            <p id="wrong-msg" class="overlay-msg overlay-msg--wrong" hidden>Не та клавиша!</p>
+          </div>
+          <div class="game-bottom">
+            <div id="virtual-keyboard" class="vkbd" aria-label="Подсказка клавиатуры"></div>
+            <aside class="game-stats" aria-label="Статус игры">
+              <div class="stat-card stat-card--score">
+                <span class="stat-card__label">Очки</span>
+                <span class="stat-card__value" id="score-value">0</span>
+              </div>
+              <div class="stat-card stat-card--time">
+                <span class="stat-card__label">Время</span>
+                <span class="stat-card__value"><span id="time-value">60</span> с</span>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-win" class="screen">
+      <div class="win-bg" aria-hidden="true"></div>
+      <div class="win-confetti" id="win-confetti" aria-hidden="true"></div>
+      <div class="screen__content screen__content--win">
+        <div class="win-card">
+          <div class="win-showcase">
+            <div class="win-showcase__ring"></div>
+            <img class="win-showcase__gif" src="assets/win/celebration.gif" alt="" draggable="false">
+          </div>
+          <h2 class="result-title result-title--win">Победа!</h2>
+          <p id="win-stars" class="win-stars" aria-label="Звёзды"></p>
+          <p id="win-subtitle" class="win-subtitle">60 секунд — ты удержал линию!</p>
+          <div class="win-score-box">
+            <span class="win-score-box__label">Набрано очков</span>
+            <span id="win-score" class="win-score-box__value">0</span>
+          </div>
+          <button id="btn-restart-win" class="btn btn--primary btn--big btn--win" type="button">Ещё раз</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-lose" class="screen">
+      <div class="lose-bg" aria-hidden="true"></div>
+      <div class="screen__content screen__content--lose">
+        <div class="lose-card">
+          <div class="lose-icon" aria-hidden="true">!</div>
+          <h2 class="result-title result-title--lose">Промах!</h2>
+          <p id="lose-score" class="result-score">Клавиша упала на линию</p>
+          <button id="btn-restart-lose" class="btn btn--primary btn--big" type="button">Заново</button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <p>Created by <span class="site-footer__author">Andrei Pabiarzhyn</span></p>
+    </footer>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>
