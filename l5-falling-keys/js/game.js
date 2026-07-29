@@ -396,11 +396,18 @@
 
     var bottom = stack.querySelector(".game-bottom");
 
-    var bottomH = bottom ? bottom.offsetHeight : 0;
+    var layoutH = Math.max(0, layout.clientHeight - padY);
+    var bottomRatio = CFG.bottomPanelRatio != null ? CFG.bottomPanelRatio : 0.2;
+    var bottomH = Math.floor(layoutH * bottomRatio);
+    var availH = Math.max(0, layoutH - bottomH);
+
+    if (bottom) {
+      bottom.style.height = bottomH + "px";
+      bottom.style.minHeight = bottomH + "px";
+      bottom.style.maxHeight = bottomH + "px";
+    }
 
     var availW = Math.max(0, layout.clientWidth - padX);
-
-    var availH = Math.max(0, layout.clientHeight - padY - bottomH);
 
     var ratio = CFG.stageWidth / CFG.stageHeight;
 
@@ -425,6 +432,7 @@
     canvas.style.height = h + "px";
 
     stack.style.width = w + "px";
+    stack.style.height = layoutH + "px";
 
   }
 

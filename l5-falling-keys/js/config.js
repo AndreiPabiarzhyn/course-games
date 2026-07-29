@@ -15,6 +15,7 @@ window.FALLING_KEYS_CONFIG = {
   gameDuration: 60,
   scratchFps: 30,
   keyDrawSize: 38,
+  bottomPanelRatio: 0.2,
   readyTime: 0.6,
   lives: 1,
   wrongMsgDuration: 0.9,
