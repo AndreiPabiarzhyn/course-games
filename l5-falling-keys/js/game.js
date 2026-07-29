@@ -46,7 +46,7 @@
     "\uD83C\uDF69", "\uD83D\uDE80", "\uD83D\uDC31", "\uD83C\uDF2E", "\uD83C\uDFAE",
     "\uD83E\uDD73", "\uD83D\uDC49", "\uD83D\uDCA9", "\uD83E\uDD16", "\uD83C\uDF0A"
   ];
-  var FUNNY_SOUND_NAMES = ["boing", "boom", "yay", "oops", "pop"];
+  var FUNNY_SOUND_NAMES = ["boing", "boom", "yay", "oops"];
 
   var screens = {
 
@@ -67,6 +67,7 @@
   var scoreEl = document.getElementById("score-value");
 
   var timeEl = document.getElementById("time-value");
+  var livesEl = document.getElementById("lives-value");
 
   var readyMsg = document.getElementById("ready-msg");
 
@@ -107,6 +108,7 @@
   var assets = { ready: false, backdrops: {}, keys: {}, line: null, smile: null };
 
   var sounds = {};
+  var funnySounds = {};
 
   var audioUnlocked = false;
 
@@ -298,56 +300,56 @@
 
 
   function unlockAudio() {
-
     if (audioUnlocked) return;
-
     audioUnlocked = true;
-
-    Object.keys(sounds).forEach(function (key) {
-
-      var clip = sounds[key];
-
-      if (!clip) return;
-
-      var probe = clip.cloneNode();
-
-      probe.volume = 0.001;
-
-      probe.play().then(function () {
-
-        probe.pause();
-
-        probe.currentTime = 0;
-
-      }).catch(function () {});
-
+    [sounds, funnySounds].forEach(function (pool) {
+      Object.keys(pool).forEach(function (key) {
+        var clip = pool[key];
+        if (!clip) return;
+        var probe = clip.cloneNode();
+        probe.volume = 0.001;
+        var playPromise = probe.play();
+        if (playPromise && playPromise.then) {
+          playPromise.then(function () {
+            probe.pause();
+            probe.currentTime = 0;
+          }).catch(function () {});
+        }
+      });
     });
-
   }
 
-
+  function playClip(clip, vol) {
+    if (!clip) return false;
+    unlockAudio();
+    try {
+      var inst = clip.cloneNode();
+      inst.volume = vol;
+      var playPromise = inst.play();
+      if (playPromise && playPromise.catch) playPromise.catch(function () {});
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
 
   function playFunnySound() {
-    var name = FUNNY_SOUND_NAMES[Math.floor(Math.random() * FUNNY_SOUND_NAMES.length)];
-    playSound(name);
+    var names = FUNNY_SOUND_NAMES.slice();
+    var i;
+    for (i = 0; i < names.length; i++) {
+      var idx = Math.floor(Math.random() * names.length);
+      var name = names.splice(idx, 1)[0];
+      var clip = funnySounds[name];
+      var vol = (CFG.soundVolume && CFG.soundVolume[name]) || 0.9;
+      if (playClip(clip, vol)) return;
+    }
+    playSound("smile");
   }
 
   function playSound(name) {
-
-    unlockAudio();
-
     var clip = sounds[name];
-
-    if (!clip) return;
-
     var vol = (CFG.soundVolume && CFG.soundVolume[name]) || 0.85;
-
-    var inst = clip.cloneNode();
-
-    inst.volume = vol;
-
-    inst.play().catch(function () {});
-
+    playClip(clip, vol);
   }
 
 
@@ -469,13 +471,21 @@
 
 
   function loadAudio(src) {
-
-    var a = new Audio(src);
-
-    a.preload = "auto";
-
-    return a;
-
+    return new Promise(function (resolve) {
+      var a = new Audio();
+      var settled = false;
+      function finish() {
+        if (settled) return;
+        settled = true;
+        resolve(a);
+      }
+      a.preload = "auto";
+      a.addEventListener("canplaythrough", finish, { once: true });
+      a.addEventListener("error", finish, { once: true });
+      window.setTimeout(finish, 3000);
+      a.src = src;
+      a.load();
+    });
   }
 
 
@@ -508,19 +518,16 @@
 
     tasks.push(loadImage("assets/smile.svg").then(function (img) { assets.smile = img; }));
 
-    sounds.correct = loadAudio("assets/sounds/correct.wav");
-
-    sounds.wrong = loadAudio("assets/sounds/wrong.wav");
-
-    sounds.pop = loadAudio("assets/sounds/pop.wav");
-
-    sounds.smile = loadAudio("assets/sounds/smile.wav");
-
+    tasks.push(loadAudio("assets/sounds/correct.wav").then(function (a) { sounds.correct = a; }));
+    tasks.push(loadAudio("assets/sounds/wrong.wav").then(function (a) { sounds.wrong = a; }));
+    tasks.push(loadAudio("assets/sounds/pop.wav").then(function (a) { sounds.pop = a; }));
+    tasks.push(loadAudio("assets/sounds/smile.wav").then(function (a) { sounds.smile = a; }));
+    tasks.push(loadAudio("assets/sounds/win.wav").then(function (a) { sounds.win = a; }));
     FUNNY_SOUND_NAMES.forEach(function (name) {
-      sounds[name] = loadAudio("assets/sounds/funny/" + name + ".wav");
+      tasks.push(loadAudio("assets/sounds/funny/" + name + ".wav").then(function (a) {
+        funnySounds[name] = a;
+      }));
     });
-
-    sounds.win = loadAudio("assets/sounds/win.wav");
 
     return Promise.all(tasks).then(function () { assets.ready = true; });
 
@@ -729,10 +736,32 @@
 
       wrongMsgLeft: 0,
 
-      shake: 0
+      shake: 0,
+
+      lives: CFG.lives != null ? CFG.lives : 1
 
     };
 
+  }
+
+  function updateLivesDisplay() {
+    if (livesEl && state) livesEl.textContent = String(Math.max(0, state.lives));
+  }
+
+  function handleKeyHitLine(index) {
+    state.falling.splice(index, 1);
+    state.shake = 0.35;
+    playSound("wrong");
+    updateVirtualKeyboard();
+    if (state.lives > 0) {
+      state.lives -= 1;
+      updateLivesDisplay();
+      wrongMsg.textContent = "\u0416\u0438\u0437\u043d\u044c \u043f\u043e\u0442\u0435\u0440\u044f\u043d\u0430!";
+      wrongMsg.hidden = false;
+      state.wrongMsgLeft = CFG.wrongMsgDuration || 0.9;
+      return;
+    }
+    endLose();
   }
 
 
@@ -744,8 +773,10 @@
     readyMsg.hidden = false;
 
     wrongMsg.hidden = true;
+    wrongMsg.textContent = "\u041d\u0435 \u0442\u0430 \u043a\u043b\u0430\u0432\u0438\u0448\u0430!";
 
     scoreEl.textContent = "0";
+    updateLivesDisplay();
     if (timeCardEl) timeCardEl.classList.remove("stat-card--urgent");
 
     timeEl.textContent = String(CFG.gameDuration);
@@ -1078,7 +1109,10 @@
 
         readyMsg.hidden = true;
 
+        spawnKey();
+        if (Math.random() < (CFG.bonusSpawnChance || 0.28)) spawnBonus();
         state.spawnTimer = state.spawnInterval;
+        updateVirtualKeyboard();
 
       }
 
@@ -1145,11 +1179,8 @@
         k.y += state.fallSpeed * frameScale;
 
         if (k.y <= CFG.lineY + 8) {
-
-          endLose();
-
-          return;
-
+          handleKeyHitLine(i);
+          break;
         }
 
       }
@@ -1245,6 +1276,7 @@
 
     document.getElementById("btn-lang-ru").addEventListener("click", function () { setInputLang("ru"); });
 
+    canvas.addEventListener("pointerdown", unlockAudio);
     canvas.addEventListener("click", onCanvasPointer);
     canvas.addEventListener("touchstart", function (e) {
       if (!e.changedTouches || !e.changedTouches[0]) return;
